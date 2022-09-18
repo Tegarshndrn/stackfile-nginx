@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+  web:
+    image: nginx
+    volumes:
+      - nginx.vol:/usr/share/nginx/html
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+          - node.hostname == worker-2
+    ports:
+      - 80:80
+    networks:
+      - web
+
+networks:
+  web:
+    driver: overlay
+    name: web
+
+volumes:
+  nginx.vol:
+    driver: nfs
+    driver_opts:
+      share: 192.168.56.14:/var/volume_data/nginx_web
